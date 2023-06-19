@@ -1,0 +1,27 @@
+.text-center{
+    text-align: center;
+}
+.flex{
+    display: flex;
+}
+.jc-center{
+    justify-content: center;
+}
+#canvas{ 
+    border: 3px solid;
+    border-color: red;
+
+}
+.col{
+
+    flex-direction: column;
+}
+.titre{
+    text-decoration: underline;
+    font-size: 3.5em;
+    color:crimson;
+}
+.nb{
+    font-size: 0.2em;
+    text-decoration: solid;
+}
