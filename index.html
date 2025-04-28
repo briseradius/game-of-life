@@ -10,23 +10,60 @@
 <body>
     <h1 class="text-center titre">THE GAME OF LIFE</h1>
     <h2 class="text-center">(Jeux de la VIE)</h2>
+    <div class="flex jc-center">
         <div class="flex jc-center">
-            <div class="flex jc-center">
-                <canvas id="canvas" width="1000" height="1000"></canvas>
-            </div>
-            <div class="flex col jc-center">
-                    <button id="random">random</button>
-                <label class="text-center" for="density">Points density</label>
-                    <input type="range" name="density" id="density" value=5 min=0 max=10>
-                    <button id="start">start</button>
-                    <button id="stop">stop</button>
-                <label class="text-center" for="speed">Speedrate</label>
-                    <input type="range" name="speed" id="speed" value=50 min=2 max=100>
-                    <button id="reset">reset</button>
-                
-            </div>            
+            <canvas id="canvas" width="1000" height="1000"></canvas>
         </div>
-        <p class="nb text-center">nb: toute ressemblance a un QR code est totalement fortuite! (pas gratuite, FORTUITE)</p>
-    <script src="main.js"></script>
+        <div class="flex col jc-center">
+            <button id="random">random</button>
+            <label class="text-center" for="density">Points density</label>
+            <input type="range" name="density" id="density" value=5 min=0 max=10>
+
+            <button id="start">start</button>
+            <button id="stop">stop</button>
+
+            <label class="text-center" for="speed">Speedrate</label>
+            <input type="range" name="speed" id="speed" value=50 min=2 max=100>
+
+            <button id="reset">reset</button>
+
+            <label class="text-center" for="automaton">Automate :</label>
+            <select id="automaton">
+                <option value="GOL.js">Jeux de la vie</option>
+                <option value="langtonAnt.js">Fourmis de Langton</option>
+                <option value="briansBrain.js">Brian's Brain</option>
+                <option value="forestfire.js">Feu de forets</option>
+                <option value="lenia.js">Lenia</option>
+            </select>
+        </div>
+    </div>
+
+    <p class="nb text-center">nb: toute ressemblance a un QR code est totalement fortuite! (pas gratuite, FORTUITE)</p>
+
+    <!-- Script qui gère le chargement dynamique -->
+    <script>
+        const automatonSelector = document.getElementById("automaton");
+        let currentScript = null;
+
+        function loadScript(src) {
+            // Supprimer l'ancien script s'il existe
+            if (currentScript) {
+                currentScript.remove();
+            }
+            // Créer un nouveau script
+            const script = document.createElement("script");
+            script.src = src;
+            script.id = "dynamic-script";
+            document.body.appendChild(script);
+            currentScript = script;
+        }
+
+        // Charger un automate par défaut au début
+        loadScript(automatonSelector.value);
+
+        automatonSelector.addEventListener("change", (e) => {
+            loadScript(e.target.value);
+        });
+    </script>
 </body>
 </html>

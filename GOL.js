@@ -67,9 +67,9 @@ function readGrid(){
     for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
             if(gridCell[i][j] === 1){
-                //ctx.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+                ctx.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
                 //ctx.fillStyle = "#C60000";
-                ctx.fillStyle = "white";
+                //ctx.fillStyle = "white";
             }
             else{
                 //ctx.fillStyle = "#F7D000";
