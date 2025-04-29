@@ -1,12 +1,19 @@
+// 🎨 Récupération du canvas et de son contexte de dessin en 2D
 const canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
-const gridCell = [];
-const gridSize = 100;
-const cellSize = canvas.width / gridSize;
+
+// 📦 Déclaration de la grille et de ses paramètres
+const gridCell = []; // Grille contenant l'état (0 ou 1) de chaque cellule
+const gridSize = 100; // Taille de la grille (100x100 cellules)
+const cellSize = canvas.width / gridSize; // Taille d'une cellule
+
+// 🕹️ Stockage de l'ID de la boucle d'animation
 var mainLoop = null;
 
-const nbArray=[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]];
+// 🧭 Tableau des directions possibles (non utilisé ici mais souvent utile)
+const nbArray = [[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]];
 
+// 🎛️ Récupération des éléments de l'interface utilisateur
 var startBtn = document.getElementById("start");
 var stopBtn = document.getElementById("stop");
 var randomBtn = document.getElementById("random");
@@ -14,13 +21,14 @@ var density = document.getElementById("density");
 var speed = document.getElementById("speed");
 var reset = document.getElementById("reset");
 
+// 🐜 Objet représentant la fourmi de Langton
 let ant = {
-    x: Math.floor(gridSize / 2),
-    y: Math.floor(gridSize / 2),
-    dir: 0 // 0 = haut, 1 = droite, 2 = bas, 3 = gauche
+    x: Math.floor(gridSize / 2), // Position X initiale au centre
+    y: Math.floor(gridSize / 2), // Position Y initiale au centre
+    dir: 0 // Direction (0 = haut, 1 = droite, 2 = bas, 3 = gauche)
 };
 
-// Initialisation de la grille
+// 🏗️ Fonction d'initialisation de la grille (toutes les cellules à 0)
 function initGrid(){
     for (let i = 0; i < gridSize; i++) {
         gridCell[i] = [];
@@ -30,67 +38,62 @@ function initGrid(){
     }
 }
 
-// Remettre à zéro
+// 🔁 Fonction pour réinitialiser la grille et l'état de la fourmi
 function resetGrid(){
     reset.addEventListener('click', function(){
-        clearInterval(mainLoop);
+        clearInterval(mainLoop); // Arrêt de la boucle
         mainLoop = null;
-        initGrid();
-        ant.x = Math.floor(gridSize / 2);
+        initGrid(); // Réinitialisation de la grille
+        ant.x = Math.floor(gridSize / 2); // Réinitialisation de la position
         ant.y = Math.floor(gridSize / 2);
         ant.dir = 0;
-        readGrid();
+        readGrid(); // Rafraîchissement de l'affichage
     })
 }
 
-// Dessin de la grille
+// 🧾 Fonction qui lit la grille et affiche chaque cellule
 function readGrid(){
     for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
-            if (gridCell[i][j] === 1) {
-                ctx.fillStyle = "white";
-            } else {
-                ctx.fillStyle = "black";
-            }
+            ctx.fillStyle = gridCell[i][j] === 1 ? "white" : "black";
             ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
         }
     }
-    drawAnt();
+    drawAnt(); // Affichage de la fourmi
 }
 
-// Dessiner la fourmi
+// 🐜 Fonction pour dessiner la fourmi en rouge
 function drawAnt(){
     ctx.fillStyle = "red";
     ctx.fillRect(ant.x * cellSize, ant.y * cellSize, cellSize, cellSize);
 }
 
-// Mouvement de la fourmi
+// 🧠 Fonction principale qui applique les règles de Langton
 function moveAnt(){
     let cellState = gridCell[ant.x][ant.y];
 
-    // règle de Langton
     if (cellState === 0) {
-        ant.dir = (ant.dir + 1) % 4; // Tourner à droite
-        gridCell[ant.x][ant.y] = 1; // Passer à blanc
+        ant.dir = (ant.dir + 1) % 4; // Tourner à droite si cellule noire
+        gridCell[ant.x][ant.y] = 1;  // Cellule devient blanche
     } else {
-        ant.dir = (ant.dir + 3) % 4; // Tourner à gauche
-        gridCell[ant.x][ant.y] = 0; // Passer à noir
+        ant.dir = (ant.dir + 3) % 4; // Tourner à gauche si cellule blanche
+        gridCell[ant.x][ant.y] = 0;  // Cellule devient noire
     }
 
-    // Avancer d'une case
+    // 🧭 Avancer d'une case dans la direction actuelle
     if (ant.dir === 0) ant.y--;
     if (ant.dir === 1) ant.x++;
     if (ant.dir === 2) ant.y++;
     if (ant.dir === 3) ant.x--;
 
-    // Gérer les bords
+    // 🌍 Gestion du dépassement des bords (effet torique)
     if (ant.x < 0) ant.x = gridSize - 1;
     if (ant.y < 0) ant.y = gridSize - 1;
     if (ant.x >= gridSize) ant.x = 0;
     if (ant.y >= gridSize) ant.y = 0;
 }
 
-// Bouton start
+// ▶️ Lancer la simulation (boucle d'animation)
 function gameStart(){
     startBtn.addEventListener('click', function(){
         if (mainLoop === null) {
@@ -102,7 +105,7 @@ function gameStart(){
     })
 }
 
-// Bouton stop
+// ⏹️ Arrêter la simulation
 function gameStop(){
     stopBtn.addEventListener('click', function(){
         clearInterval(mainLoop);
@@ -110,7 +113,7 @@ function gameStop(){
     })
 }
 
-// Remplissage aléatoire
+// 🎲 Remplissage aléatoire de la grille selon la densité choisie
 function randomise(){
     randomBtn.addEventListener('click', function(){
         for (let i = 0; i < gridSize; i++) {
@@ -122,7 +125,7 @@ function randomise(){
     })
 }
 
-// Changer la vitesse en direct
+// ⏩ Mise à jour de la vitesse pendant la simulation
 speed.addEventListener('input', function(){
     if (mainLoop !== null) {
         clearInterval(mainLoop);
@@ -133,7 +136,7 @@ speed.addEventListener('input', function(){
     }
 });
 
-// Interaction souris pour colorier manuellement
+// 🖱️ Interaction avec la souris pour dessiner à la main sur la grille
 function getMousePosition(e) {
     var rect = canvas.getBoundingClientRect();
     var posX = e.clientX - rect.left;
@@ -141,15 +144,14 @@ function getMousePosition(e) {
     var pX = Math.floor(posX / cellSize);
     var pY = Math.floor(posY / cellSize);
 
-    gridCell[pX][pY] = gridCell[pX][pY] ? 0 : 1;
+    gridCell[pX][pY] = gridCell[pX][pY] ? 0 : 1; // Inverser la cellule
     readGrid();
 }
-
 canvas.addEventListener('click', function(e){ 
     getMousePosition(e);
 });
 
-// Initialisation générale
+// 🔃 Initialisation générale au démarrage
 initGrid();
 readGrid();
 gameStart();
