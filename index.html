@@ -35,6 +35,7 @@
                 <option value="forestfire.js">Feu de forets</option>
                 <option value="lenia.js">Lenia</option>
             </select>
+            <button id="reload">Recharger la page</button>
         </div>
     </div>
 
@@ -64,6 +65,9 @@
         automatonSelector.addEventListener("change", (e) => {
             loadScript(e.target.value);
         });
+        document.getElementById("reload").addEventListener("click", () => {
+            location.reload();
+          });
     </script>
 </body>
 </html>

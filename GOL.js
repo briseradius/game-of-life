@@ -107,7 +107,7 @@ start.addEventListener("click", () => {
     mainLoop = setInterval(() => {
       updateGrid();
       readGrid();
-    }, speed.value * 10);
+    }, 1000 / speed.value);
   }
 });
 
